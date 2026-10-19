@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080C1A">
 <title>EmpresTI</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23001449%22/><path d=%22M8 11l8-4 8 4v9l-8 4-8-4z%22 fill=%22none%22 stroke=%22%238AA6EE%22 stroke-width=%221.6%22 stroke-linejoin=%22round%22/><path d=%22M8 11l8 4 8-4M16 15v9%22 fill=%22none%22 stroke=%22%238AA6EE%22 stroke-width=%221.6%22/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23001449%22/><path d=%22M8 11l8-4 8 4v9l-8 4-8-4z%22 fill=%22none%22 stroke=%22%239DB1F8%22 stroke-width=%221.6%22 stroke-linejoin=%22round%22/><path d=%22M8 11l8 4 8-4M16 15v9%22 fill=%22none%22 stroke=%22%239DB1F8%22 stroke-width=%221.6%22/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -47,12 +48,12 @@
           <span class="brand-name">EmpresTI</span>
         </div>
         <div class="hero-mid">
-          <h1>Peça um equipamento sem burocracia</h1>
-          <p>Empréstimo interno de notebooks, monitores e acessórios para o time.</p>
+          <h1>Precisou de um equipamento? É só pedir</h1>
+          <p>Notebooks, monitores, câmeras e acessórios para o time, com retirada rápida no balcão.</p>
           <div class="rule-mark"></div>
           <div class="hero-stats">
-            <div class="hero-stat"><p class="num">3</p><p class="label">itens por pessoa</p></div>
-            <div class="hero-stat"><p class="num">14</p><p class="label">dias de prazo</p></div>
+            <div class="hero-stat"><p class="num">3</p><p class="label">itens por colaborador</p></div>
+            <div class="hero-stat"><p class="num">14</p><p class="label">dias para devolver</p></div>
           </div>
         </div>
         <div class="hero-footer">Operações · v1</div>
@@ -60,7 +61,7 @@
       <div class="login-form-wrap">
         <div class="login-form">
           <h2>Entrar</h2>
-          <p class="sub">Use seu e-mail corporativo.</p>
+          <p class="sub">Entre com seu e-mail corporativo.</p>
           <form id="login-form" novalidate>
           <div class="login-fields">
             <div class="field">
@@ -76,7 +77,7 @@
           <button class="btn btn-primary" style="width:100%;" type="submit" id="login-submit">Entrar <svg class="icon" width="15" height="15"><use href="#i-arrowright"/></svg></button>
           </form>
           <div class="rule" style="margin:22px 0;"></div>
-          <p class="support-note">Precisa de ajuda? Fale com Operações.</p>
+          <p class="support-note">Problemas para entrar? Fale com Operações.</p>
         </div>
       </div>
     </div>
@@ -94,7 +95,7 @@
       <aside class="sidebar" id="sidebar-2"></aside>
       <div class="main">
         <header class="app-header">
-          <label class="search"><svg class="icon" width="15" height="15"><use href="#i-search"/></svg><input class="search-input" id="catalog-search" type="search" placeholder="Buscar equipamento…" aria-label="Buscar equipamento"></label>
+          <label class="search"><svg class="icon" width="15" height="15"><use href="#i-search"/></svg><input class="search-input" id="catalog-search" type="search" placeholder="Buscar por nome, categoria ou patrimônio…" aria-label="Buscar equipamento"></label>
           <div class="header-spacer"></div>
           <span class="header-meta">2 de 3 itens com você</span>
           <button class="bell"><svg class="icon" width="17" height="17"><use href="#i-bell"/></svg></button>
@@ -107,7 +108,7 @@
           <div class="warning-banner">
             <svg class="icon" width="17" height="17"><use href="#i-info"/></svg>
             <div>
-              <p class="wb-title">Antes de solicitar</p>
+              <p class="wb-title">Antes de pedir</p>
               <p class="wb-body">Limite de 3 itens por pessoa. Prazo padrão de 14 dias. Empréstimos em atraso bloqueiam novas solicitações. Itens em manutenção não aparecem disponíveis.</p>
             </div>
           </div>
@@ -171,11 +172,11 @@
             </div>
             <div style="display:flex; flex-direction:column; gap:16px;">
               <div class="side-card">
-                <h3>Solicitar empréstimo</h3>
+                <h3>Pedir emprestado</h3>
                 <div class="side-row"><span>Retirada</span><span class="val">Hoje, 21/set</span></div>
                 <div class="side-row"><span>Prazo padrão</span><span class="val">14 dias</span></div>
                 <div class="side-row"><span>Devolver até</span><span class="val accent" id="detail-due">05/out</span></div>
-                <button class="btn btn-primary" style="width:100%;" id="open-dialog-btn">Solicitar empréstimo</button>
+                <button class="btn btn-primary" style="width:100%;" id="open-dialog-btn">Pedir emprestado</button>
                 <p class="side-note" id="detail-note">A retirada é feita no balcão de Operações, 2º andar.</p>
               </div>
               <div class="side-card">
@@ -213,7 +214,7 @@
         <header class="app-header">
           <div class="breadcrumb"><span class="current">Meus empréstimos</span></div>
           <div class="header-spacer"></div>
-          <button class="header-btn" id="go-catalog-btn" type="button">Pegar emprestado <svg class="icon" width="14" height="14"><use href="#i-arrowright"/></svg></button>
+          <button class="header-btn" id="go-catalog-btn" type="button">Novo empréstimo <svg class="icon" width="14" height="14"><use href="#i-arrowright"/></svg></button>
         </header>
         <div class="content">
           <div class="loans-head">
@@ -369,7 +370,7 @@
                   </div>
                   <p class="equip-name" id="preview-nome">MacBook Air 13" M2</p>
                   <p class="equip-meta" id="preview-meta">Notebook · PAT-1204</p>
-                  <p class="equip-footer" style="color:#8AA6EE;">Solicitar →</p>
+                  <p class="equip-footer" style="color:#9DB1F8;">Pedir emprestado →</p>
                 </div>
               </div>
               <div class="side-card">
@@ -390,4 +391,4 @@
 <script src="config.js"></script>
 <script src="app.js"></script>
 </body>
-</html>
+</html>

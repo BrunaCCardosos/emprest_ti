@@ -49,6 +49,25 @@ function setMessage(el, kind, text){
   el.hidden = false;
 }
 
+let toastTimer = null;
+function showToast(text, kind){
+  let el = byId('toast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'toast';
+    el.className = 'toast';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    document.body.appendChild(el);
+  }
+  el.textContent = text;
+  el.classList.toggle('ok', kind === 'ok');
+  void el.offsetWidth;   // força reflow para a transição rodar em avisos seguidos
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2800);
+}
+
 function emptyState(text){
   const el = document.createElement('div');
   el.className = 'empty-state';
@@ -222,7 +241,7 @@ function catalogCard(item){
   let pill = '', footer = '', clickable = '';
   if(item.state === 'ok'){
     pill = '<span class="pill pill-ok">Disponível</span>';
-    footer = '<span style="color:#8AA6EE;">Solicitar →</span>';
+    footer = '<span style="color:#9DB1F8;">Pedir emprestado →</span>';
     clickable = ' clickable';
   }
   if(item.state === 'borrowed'){
@@ -242,7 +261,16 @@ function catalogCard(item){
       <p class="equip-name">${item.name}</p>
       <p class="equip-meta">${item.meta}</p>
       <p class="equip-footer">${footer}</p>`;
-  if(item.state === 'ok') card.addEventListener('click', function(){ state.pendingItem = item; renderDetail(); location.hash = '#s3'; });
+  if(item.state === 'ok'){
+    const open = function(){ state.pendingItem = item; renderDetail(); location.hash = '#s3'; };
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', 'Ver detalhes de ' + item.name);
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', function(event){
+      if(event.key === 'Enter' || event.key === ' '){ event.preventDefault(); open(); }
+    });
+  }
   return card;
 }
 
@@ -263,13 +291,15 @@ function renderCatalog(){
     return predicate(item) &&
       (!filter.onlyAvailable || item.state === 'ok') &&
       matchesQuery(filter.query, [item.name, item.meta, item.pat, item.category]);
+  }).sort(function(a, b){
+    return (a.state === 'ok' ? 0 : 1) - (b.state === 'ok' ? 0 : 1);
   });
 
   const grid = byId('catalog-grid');
   if(grid){
     grid.innerHTML = '';
     if(items.length) items.forEach(function(item){ grid.appendChild(catalogCard(item)); });
-    else grid.appendChild(emptyState('Nenhum equipamento com esse filtro.'));
+    else grid.appendChild(emptyState('Nada encontrado por aqui. Tente outro filtro ou outra busca.'));
   }
 
   const count = byId('catalog-count');
@@ -376,7 +406,7 @@ function renderLoans(){
   if(list){
     list.innerHTML = '';
     if(state.loans.length) state.loans.forEach(function(loan){ list.appendChild(renderLoanRow(loan)); });
-    else list.appendChild(emptyState('Nenhum item com você agora.'));
+    else list.appendChild(emptyState('Você não está com nenhum item no momento.'));
   }
 
   const sub = byId('loans-sub');
@@ -411,6 +441,8 @@ function filterOps(){
   const predicate = OPS_CHIPS[filter.chip] || OPS_CHIPS['Todos'];
   return state.ops.filter(function(row){
     return predicate(row) && matchesQuery(filter.query, [row.item, row.pat, row.person]);
+  }).sort(function(a, b){
+    return (a.state === 'late' ? 0 : 1) - (b.state === 'late' ? 0 : 1);
   });
 }
 
@@ -426,7 +458,7 @@ function renderOps(){
   if(container){
     container.innerHTML = '';
     if(visible.length) visible.forEach(function(row){ container.appendChild(renderOpsRow(row)); });
-    else container.appendChild(emptyState('Nenhum empréstimo em aberto com esse filtro.'));
+    else container.appendChild(emptyState('Nenhum empréstimo em aberto para esse filtro.'));
   }
 
   const info = byId('ops-pagination');
@@ -474,6 +506,7 @@ function returnLoan(loan, row){
     renderCatalog();
     renderLoans();
     renderSidebars();
+    showToast(loan.name + ' devolvido. Obrigado!', 'ok');
   }, 210);
 }
 
@@ -487,6 +520,7 @@ function returnOpRow(data, row){
     if(data.state === 'late' && state.stats.late > 0) state.stats.late--;
     renderOps();
     renderStats();
+    showToast(data.item + ' (' + data.pat + ') devolvido.', 'ok');
   }, 200);
 }
 
@@ -502,7 +536,7 @@ function openLoanDialog(){
     return;
   }
   if(hasOverdue()){
-    setMessage(byId('detail-message'), 'warn', 'Você tem item em atraso e não pode solicitar novo empréstimo.');
+    setMessage(byId('detail-message'), 'warn', 'Você tem item em atraso e não pode pedir outro equipamento até regularizar.');
     return;
   }
   setMessage(byId('detail-message'), '', '');
@@ -510,7 +544,7 @@ function openLoanDialog(){
   const total = state.loans.length + 1;
   const body = byId('dialog-body');
   if(body){
-    body.innerHTML = 'Você está solicitando <strong style="color:#E6EAF6;">' + item.name + ' (' + item.pat + ')</strong>, ' +
+    body.innerHTML = 'Você está pedindo <strong style="color:#E6EAF6;">' + item.name + ' (' + item.pat + ')</strong>, ' +
       'com devolução prevista para <strong style="color:#E6EAF6;">' + (item.dueLabel || DUE_LABEL) + '</strong>.';
   }
   const note = byId('dialog-note');
@@ -548,6 +582,7 @@ function confirmLoan(){
   renderLoans();
   renderSidebars();
   location.hash = '#s4';
+  showToast('Pedido confirmado! Retire no balcão de Operações.', 'ok');
 }
 
 /* ---------- 10 · cadastro de equipamento (tela 06) ---------- */
@@ -670,11 +705,11 @@ async function handleLogin(event){
   const senha = senhaEl ? senhaEl.value : '';
 
   if(!email || !senha){
-    setMessage(message, 'warn', 'Informe e-mail e senha.');
+    setMessage(message, 'warn', 'Preencha e-mail e senha para continuar.');
     return;
   }
   if(!EMAIL_RE.test(email)){
-    setMessage(message, 'warn', 'E-mail inválido. Use o formato nome@empresa.com.');
+    setMessage(message, 'warn', 'Esse e-mail não parece válido. Use o formato nome@empresa.com.');
     return;
   }
   if(!AUTH_AVAILABLE){
@@ -711,7 +746,7 @@ async function handleLogout(){
   }
   session = null;
   applySession();   // sem sessão, o roteador volta ao login
-  setMessage(byId('login-message'), 'info', 'Sessão encerrada.');
+  setMessage(byId('login-message'), 'info', 'Você saiu da sua conta.');
 }
 
 /* ---------- 12 · eventos ---------- */
@@ -854,4 +889,4 @@ function boot(){
 }
 
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-else boot();
+else boot();
