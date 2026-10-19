@@ -1,0 +1,243 @@
+// =============================================================================
+// EmpresTI — schema do banco (PostgreSQL · Supabase)
+// -----------------------------------------------------------------------------
+// Decisões: docs/adr/001-stack.md §5 (dados), §6 (multi-tenancy), §10 (segurança)
+// Regras:    docs/PRD.md
+// Restrictions · Dados e Prisma: Prisma Migrate é o único dono do schema;
+//   RLS, policy e trigger entram como SQL bruto na migration (nunca pelo painel
+//   do Supabase). Runtime usa DATABASE_URL (Supavisor :6543, pooler); DIRECT_URL
+//   (:5432) é exclusivo de migration.
+//
+// Regras de negócio do PRD e onde vivem (service + Zod, não no banco):
+//   1. Máximo de 3 itens simultâneos por colaborador → count de empréstimos
+//      abertos do usuário no tenant (índice [tenantId, userId, returnedAt]).
+//   2. Prazo padrão de 14 dias → Loan.dueDate calculado no service ao abrir
+//      o empréstimo (borrowedAt + 14d); sem default mágico no banco.
+//   3. Atraso bloqueia novo empréstimo → mesma consulta: empréstimo aberto
+//      (returnedAt NULL) com dueDate < now().
+//   4. Manutenção/fora de uso nunca ficam disponíveis → Equipment.status.
+//
+// Colunas derivadas (deliberadamente NÃO armazenadas):
+//   "Emprestado"   = existe empréstimo com returnedAt NULL para o equipamento
+//   "Em atraso"    = returnedAt NULL AND dueDate < now()
+//   "No prazo"     = returnedAt <= dueDate (histórico devolvido)
+//   "Última devolução" = max(returnedAt) dos empréstimos do equipamento
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // runtime (Supavisor, porta 6543, pooler)
+  directUrl = env("DIRECT_URL") // somente migration (porta 5432)
+}
+
+// -----------------------------------------------------------------------------
+// Identidade e multi-tenancy
+// -----------------------------------------------------------------------------
+
+/// Tenant isolado por coluna em banco único (ADR-001 §6). O `tenant_id` do
+/// request NUNCA vem do input: é resolvido no `createContext` a partir da
+/// sessão e injetado pelo `tenantProcedure`.
+model Tenant {
+  id        String   @id @default(uuid()) @db.Uuid
+  slug      String   @unique
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  memberships Membership[]
+  equipments  Equipment[]
+  loans       Loan[]
+  auditLogs   AuditLog[]
+
+  @@map("tenants")
+}
+
+/// Perfil da pessoa. É tabela de IDENTIDADE, não de domínio: o vínculo com
+/// tenant vive em `memberships` (ADR-001 §6 — a mesma pessoa pode atuar em
+/// mais de um vínculo/papel), por isso não há `tenant_id` aqui.
+/// `authUserId` aponta para `auth.users` do Supabase Auth; sem FK porque o
+/// schema `auth` é gerenciado pelo Supabase, fora do Prisma Migrate.
+model User {
+  id         String   @id @default(uuid()) @db.Uuid
+  authUserId String?  @unique @map("auth_user_id")
+  name       String
+  email      String   @unique
+  /// Área/Setor exibido na sidebar (Design, Eng, Financeiro…).
+  department String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  memberships Membership[]
+  loans       Loan[]
+  auditLogs   AuditLog[]
+
+  @@map("users")
+}
+
+// /// Papel dentro do tenant. ADMIN = Operações (cadastra equipamento, registra
+/// devolução no balcão); MEMBER = Colaborador (solicita e devolve os próprios
+/// itens). A matriz completa de permissão não é decidida pelo ADR-001.
+enum MembershipRole {
+  ADMIN
+  MEMBER
+
+  @@map("membership_role")
+}
+
+/// Vínculo usuário–tenant com papel por vínculo (ADR-001 §6: tabela
+/// `memberships (user_id, tenant_id, role)`). É esta tabela que carrega o
+/// `tenant_id` exigido por toda tabela de domínio desde a migration inicial.
+model Membership {
+  id        String         @id @default(uuid()) @db.Uuid
+  userId    String         @map("user_id") @db.Uuid
+  tenantId  String         @map("tenant_id") @db.Uuid
+  role      MembershipRole @default(MEMBER)
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tenantId])
+  @@index([tenantId, role])
+  @@map("memberships")
+}
+
+// -----------------------------------------------------------------------------
+// Catálogo (PRD · item 2)
+// -----------------------------------------------------------------------------
+
+/// Categorias fechadas do formulário de cadastro (tela 06).
+enum EquipmentCategory {
+  NOTEBOOK
+  MONITOR
+  CAMERA
+  ACCESSORY
+  PROJECTOR
+
+  @@map("equipment_category")
+}
+
+/// Situação do equipamento. "Emprestado" NÃO é estado aqui: deriva de
+/// empréstimo aberto. OUT_OF_SERVICE ("Fora de uso") sai do catálogo
+/// inteiramente (design system §10.5); MAINTENANCE aparece no catálogo mas
+/// nunca como disponível (PRD).
+enum EquipmentStatus {
+  AVAILABLE
+  MAINTENANCE
+  OUT_OF_SERVICE
+
+  @@map("equipment_status")
+}
+
+/// Um registro por unidade física (tela 06). `patrimony` é único por tenant —
+/// é a chave de negócio usada nas rotas (`/catalogo/:patrimonio`).
+model Equipment {
+  id           String            @id @default(uuid()) @db.Uuid
+  tenantId     String            @map("tenant_id") @db.Uuid
+  name         String
+  category     EquipmentCategory
+  /// Ex.: PAT-1042
+  patrimony    String
+  serialNumber String?           @map("serial_number")
+  /// Local de retirada (ex.: "Balcão · 2º andar").
+  location     String?
+  status       EquipmentStatus   @default(AVAILABLE)
+  /// Observações internas do cadastro.
+  notes        String?
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  loans  Loan[]
+
+  @@unique([tenantId, patrimony])
+  @@index([tenantId, status])
+  @@index([tenantId, category])
+  @@map("equipments")
+}
+
+// -----------------------------------------------------------------------------
+// Empréstimos (PRD · itens 3–5)
+// -----------------------------------------------------------------------------
+
+/// Ciclo de vida: aberto = `returnedAt` NULL; devolvido = preenchido;
+/// atraso = aberto com `dueDate` vencido. Sem coluna de status derivada —
+/// a consulta é sempre pelos índices abaixo.
+/// Exclusão de equipamento com histórico é bloqueada (onDelete: Restrict):
+/// o histórico é o motivo de existir o sistema (o "item some" do PRD).
+model Loan {
+  id          String    @id @default(uuid()) @db.Uuid
+  tenantId    String    @map("tenant_id") @db.Uuid
+  equipmentId String    @map("equipment_id") @db.Uuid
+  /// Quem está/ficou com o item (quem solicitou o empréstimo).
+  userId      String    @map("user_id") @db.Uuid
+  /// Retirada.
+  borrowedAt  DateTime  @default(now()) @map("borrowed_at")
+  /// Prazo (PRD: 14 dias) — calculado no service: borrowedAt + 14d.
+  dueDate     DateTime  @map("due_date")
+  /// Devolução; NULL = empréstimo em aberto.
+  returnedAt  DateTime? @map("returned_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  equipment Equipment @relation(fields: [equipmentId], references: [id], onDelete: Restrict)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  /// "Meus empréstimos" + contagem do limite de 3 (regra 1).
+  @@index([tenantId, userId, returnedAt])
+  /// Tela de Operações: abertos, atrasados e "vencem em N dias".
+  @@index([tenantId, returnedAt, dueDate])
+  /// Histórico por equipamento (detalhe do item).
+  @@index([equipmentId])
+  @@map("loans")
+}
+
+// -----------------------------------------------------------------------------
+// Infraestrutura decidida no ADR-001 §10 (não são regras do PRD)
+// -----------------------------------------------------------------------------
+
+/// Auditoria append-only: ator, tenant, ação e recurso (ADR-001 §10 — "desde
+/// o início; retrofitar não recupera o passado"). UPDATE/DELETE são bloqueados
+/// por trigger criado na migration. `actorUserId` NULL = ação do sistema.
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  tenantId     String   @map("tenant_id") @db.Uuid
+  actorUserId  String?  @map("actor_user_id") @db.Uuid
+  /// Ex.: "equipment.create", "loan.request", "loan.return".
+  action       String
+  /// Ex.: "equipment", "loan", "user".
+  resourceType String   @map("resource_type")
+  resourceId   String?  @map("resource_id")
+  /// Contexto extra (IP, dados anteriores/novos); nunca segredo.
+  metadata     Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  actor  User?  @relation(fields: [actorUserId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId, createdAt])
+  @@index([resourceType, resourceId])
+  @@map("audit_logs")
+}
+
+/// Contador de rate limit por IP e por usuário (ADR-001 §10 — contador no
+/// Postgres; memória não funciona em serverless). Janela fixa: upsert do
+/// contador + DELETE oportunístico de janelas vencidas no mesmo request —
+/// não existe job agendado (restrictions · Limites operacionais).
+/// Infraestrutura, não domínio: não recebe `tenant_id`.
+model RateLimitCounter {
+  id          String   @id @default(uuid()) @db.Uuid
+  /// Ex.: "ip:203.0.113.7" ou "user:<uuid>".
+  key         String
+  windowStart DateTime @map("window_start")
+  count       Int      @default(0)
+
+  @@unique([key, windowStart])
+  @@index([windowStart])
+  @@map("rate_limit_counters")
+}

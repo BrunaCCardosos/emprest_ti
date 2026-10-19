@@ -1,0 +1,17 @@
+# segredos — nunca versionar
+.env
+.env.*
+!.env.example
+
+# dependências e build
+node_modules/
+.next/
+out/
+build/
+coverage/
+
+# logs e editores
+*.log
+.DS_Store
+.vscode/
+.idea/

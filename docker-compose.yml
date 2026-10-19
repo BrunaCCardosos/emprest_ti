@@ -1,0 +1,30 @@
+# Postgres local OPCIONAL para desenvolvimento do dia a dia.
+#
+# Isso NÃO é usado pelos testes de integração — o Testcontainers (citado no
+# ADR / regras.md) sobe e derruba seu próprio Postgres descartável a cada
+# `vitest run`, sem precisar deste arquivo nem de nenhuma credencial extra.
+#
+# Use este compose apenas se você preferir desenvolver contra um Postgres
+# local em vez de bater direto no projeto Supabase remoto.
+#
+# Subir:    docker compose up -d
+# Derrubar: docker compose down
+# Zerar:    docker compose down -v
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      # 5433 na máquina host (evita conflito com um Postgres já rodando
+      # localmente na 5432 padrão)
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

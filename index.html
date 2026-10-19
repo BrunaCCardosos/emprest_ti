@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EmpresTI</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23001449%22/><path d=%22M8 11l8-4 8 4v9l-8 4-8-4z%22 fill=%22none%22 stroke=%22%238AA6EE%22 stroke-width=%221.6%22 stroke-linejoin=%22round%22/><path d=%22M8 11l8 4 8-4M16 15v9%22 fill=%22none%22 stroke=%22%238AA6EE%22 stroke-width=%221.6%22/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- icon sprite (inline, self-contained) -->
+<svg style="display:none" aria-hidden="true">
+<defs>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="M12 3l8 4.2v9.6L12 21l-8-4.2V7.2L12 3z"/><path d="M4 7.2L12 11l8-3.8"/><path d="M12 11v10"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-handdown" viewBox="0 0 24 24">    <path d="M12 3v11"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></symbol>
+<symbol id="i-listchecks" viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M4 6l1.3 1.3L7.5 5"/><path d="M4 12l1.3 1.3 2.2-2.3"/><path d="M4 18l1.3 1.3 2.2-2.3"/></symbol>
+<symbol id="i-plussquare" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8"/><path d="M8 12h8"/></symbol>
+<symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="10.5" rx="1.3"/><path d="M2.5 19.5h19"/><path d="M9.5 19.5l.6-1.8h3.8l.6 1.8"/></symbol>
+<symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="12" rx="1.3"/><path d="M9 19.5h6"/><path d="M12 16.5v3"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10" rx="1.5"/><path d="M15 10.5l6-3v9l-6-3"/></symbol>
+<symbol id="i-usb" viewBox="0 0 24 24"><rect x="4" y="9" width="7" height="6" rx="1.3"/><path d="M11 12h4"/><path d="M15 8v8"/><path d="M15 8l4-2"/><path d="M15 16l4 2"/><circle cx="20" cy="6" r="1.2"/><circle cx="20" cy="18" r="1.2"/></symbol>
+<symbol id="i-projector" viewBox="0 0 24 24"><rect x="3" y="8" width="14" height="8" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M17 11l4-2v6l-4-2"/><path d="M8 16v3"/><path d="M5 19h6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></symbol>
+<symbol id="i-funnel" viewBox="0 0 24 24"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5L4 5z"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-caretright" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="i-caretdown" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></symbol>
+<symbol id="i-arrowright" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 10a6 6 0 1112 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10z"/><path d="M10 19a2 2 0 004 0"/></symbol>
+</defs>
+</svg>
+
+<!-- ============================================================ -->
+<!-- 01 · LOGIN -->
+<!-- ============================================================ -->
+<section class="view" id="s1" data-title="Entrar" hidden>
+    <div class="login-shell">
+      <div class="login-hero">
+        <div class="brand">
+          <div class="brand-mark"><svg class="icon" width="18" height="18"><use href="#i-package"/></svg></div>
+          <span class="brand-name">EmpresTI</span>
+        </div>
+        <div class="hero-mid">
+          <h1>Peça um equipamento sem burocracia</h1>
+          <p>Empréstimo interno de notebooks, monitores e acessórios para o time.</p>
+          <div class="rule-mark"></div>
+          <div class="hero-stats">
+            <div class="hero-stat"><p class="num">3</p><p class="label">itens por pessoa</p></div>
+            <div class="hero-stat"><p class="num">14</p><p class="label">dias de prazo</p></div>
+          </div>
+        </div>
+        <div class="hero-footer">Operações · v1</div>
+      </div>
+      <div class="login-form-wrap">
+        <div class="login-form">
+          <h2>Entrar</h2>
+          <p class="sub">Use seu e-mail corporativo.</p>
+          <form id="login-form" novalidate>
+          <div class="login-fields">
+            <div class="field">
+              <label for="login-email">E-mail</label>
+              <input class="input" id="login-email" name="email" type="email" autocomplete="username" placeholder="nome@empresa.com">
+            </div>
+            <div class="field">
+              <label for="login-senha">Senha</label>
+              <input class="input" id="login-senha" name="password" type="password" autocomplete="current-password" placeholder="••••••••">
+            </div>
+          </div>
+          <div class="form-message" id="login-message" role="status" aria-live="polite" hidden></div>
+          <button class="btn btn-primary" style="width:100%;" type="submit" id="login-submit">Entrar <svg class="icon" width="15" height="15"><use href="#i-arrowright"/></svg></button>
+          </form>
+          <div class="rule" style="margin:22px 0;"></div>
+          <p class="support-note">Precisa de ajuda? Fale com Operações.</p>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SIDEBAR (reused markup, generated per screen below) -->
+<!-- ============================================================ -->
+
+<!-- ============================================================ -->
+<!-- 02 · CATÁLOGO -->
+<!-- ============================================================ -->
+<section class="view" id="s2" data-title="Catálogo" hidden>
+    <div class="app-shell tall">
+      <aside class="sidebar" id="sidebar-2"></aside>
+      <div class="main">
+        <header class="app-header">
+          <label class="search"><svg class="icon" width="15" height="15"><use href="#i-search"/></svg><input class="search-input" id="catalog-search" type="search" placeholder="Buscar equipamento…" aria-label="Buscar equipamento"></label>
+          <div class="header-spacer"></div>
+          <span class="header-meta">2 de 3 itens com você</span>
+          <button class="bell"><svg class="icon" width="17" height="17"><use href="#i-bell"/></svg></button>
+        </header>
+        <div class="content">
+          <div class="page-title">
+            <h1>Catálogo</h1>
+            <span class="page-count" id="catalog-count">32 equipamentos · 11 disponíveis agora</span>
+          </div>
+          <div class="warning-banner">
+            <svg class="icon" width="17" height="17"><use href="#i-info"/></svg>
+            <div>
+              <p class="wb-title">Antes de solicitar</p>
+              <p class="wb-body">Limite de 3 itens por pessoa. Prazo padrão de 14 dias. Empréstimos em atraso bloqueiam novas solicitações. Itens em manutenção não aparecem disponíveis.</p>
+            </div>
+          </div>
+          <div class="chips-row">
+            <button class="chip active">Todos</button>
+            <button class="chip">Notebooks</button>
+            <button class="chip">Monitores</button>
+            <button class="chip">Câmeras</button>
+            <button class="chip">Acessórios</button>
+            <span style="flex:1"></span>
+            <button class="chip">Só disponíveis</button>
+          </div>
+          <div class="catalog-grid" id="catalog-grid"></div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 03 · DETALHE -->
+<!-- ============================================================ -->
+<section class="view" id="s3" data-title="Detalhe do item" hidden>
+    <div class="app-shell tall">
+      <aside class="sidebar" id="sidebar-3"></aside>
+      <div class="main">
+        <header class="app-header">
+          <div class="breadcrumb">
+            <a href="#s2">Catálogo</a>
+            <svg class="icon" width="12" height="12"><use href="#i-caretright"/></svg>
+            <span id="detail-crumb-cat">Notebooks</span>
+            <svg class="icon" width="12" height="12"><use href="#i-caretright"/></svg>
+            <span class="current" id="detail-crumb-name">MacBook Pro 14"</span>
+          </div>
+          <div class="header-spacer"></div>
+          <span class="header-meta">2 de 3 itens com você</span>
+        </header>
+        <div class="content">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-image"><svg class="icon" width="64" height="64"><use id="detail-icon" href="#i-laptop"/></svg></div>
+              <div class="detail-title-row">
+                <h1 id="detail-name">MacBook Pro 14"</h1>
+                <span class="pill pill-ok">Disponível</span>
+              </div>
+              <p class="detail-desc" id="detail-desc">Notebook de alta performance para desenvolvimento e edição. Acompanha carregador USB-C original. Recomendado para uso em escritório e viagens curtas.</p>
+              <div class="rule"></div>
+              <div class="spec-grid">
+                <div class="spec-item"><p class="label">Categoria</p><p class="value" id="detail-cat">Notebook</p></div>
+                <div class="spec-item"><p class="label">Patrimônio</p><p class="value" id="detail-pat">PAT-1042</p></div>
+                <div class="spec-item"><p class="label">Local</p><p class="value">Balcão · 2º andar</p></div>
+                <div class="spec-item"><p class="label">Última devolução</p><p class="value">02/set</p></div>
+              </div>
+              <div id="detail-history">
+              <p class="hist-title">Histórico</p>
+              <div>
+                <div class="hist-row"><span class="date">02/set</span><span>Devolvido por Bruno Kato</span><span class="result ok">No prazo</span></div>
+                <div class="hist-row"><span class="date">15/ago</span><span>Retirado por Bruno Kato</span><span></span></div>
+                <div class="hist-row"><span class="date">28/jul</span><span>Devolvido por Ana Sato</span><span class="result late">Atraso de 2 dias</span></div>
+              </div>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div class="side-card">
+                <h3>Solicitar empréstimo</h3>
+                <div class="side-row"><span>Retirada</span><span class="val">Hoje, 21/set</span></div>
+                <div class="side-row"><span>Prazo padrão</span><span class="val">14 dias</span></div>
+                <div class="side-row"><span>Devolver até</span><span class="val accent" id="detail-due">05/out</span></div>
+                <button class="btn btn-primary" style="width:100%;" id="open-dialog-btn">Solicitar empréstimo</button>
+                <p class="side-note" id="detail-note">A retirada é feita no balcão de Operações, 2º andar.</p>
+              </div>
+              <div class="side-card">
+                <h3>Seus itens</h3>
+                <div class="side-row"><span>Em uso</span><span class="val" id="detail-items-count">2 de 3</span></div>
+                <div class="limit-segments"><div class="limit-seg filled"></div><div class="limit-seg filled"></div><div class="limit-seg"></div></div>
+                <p class="side-note" id="detail-side-note">Este pedido levará você a 3 de 3 itens.</p>
+                <div class="form-message" id="detail-message" role="status" aria-live="polite" hidden></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-backdrop" id="dialog-backdrop">
+      <div class="dialog-box">
+        <p class="dialog-title">Confirmar empréstimo</p>
+        <p class="dialog-body" id="dialog-body">Você está solicitando <strong style="color:#E6EAF6;">MacBook Pro 14" (PAT-1042)</strong>, com devolução prevista para <strong style="color:#E6EAF6;">05/out</strong>.</p>
+        <div class="dialog-note" id="dialog-note">Este pedido levará você a 3 de 3 itens permitidos. Você não poderá solicitar outro equipamento até devolver algum item.</div>
+        <div class="dialog-actions">
+          <button class="btn btn-secondary btn-dialog" id="dialog-cancel">Cancelar</button>
+          <button class="btn btn-confirm btn-dialog" id="dialog-confirm">Confirmar retirada</button>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 04 · MEUS EMPRÉSTIMOS -->
+<!-- ============================================================ -->
+<section class="view" id="s4" data-title="Meus empréstimos" hidden>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar-4"></aside>
+      <div class="main">
+        <header class="app-header">
+          <div class="breadcrumb"><span class="current">Meus empréstimos</span></div>
+          <div class="header-spacer"></div>
+          <button class="header-btn" id="go-catalog-btn" type="button">Pegar emprestado <svg class="icon" width="14" height="14"><use href="#i-arrowright"/></svg></button>
+        </header>
+        <div class="content">
+          <div class="loans-head">
+            <div>
+              <h2>Comigo agora</h2>
+              <p class="sub" id="loans-sub">2 de 3 itens · nenhum em atraso</p>
+            </div>
+            <div class="segwrap">
+              <div class="limit-segments"><div class="limit-seg filled"></div><div class="limit-seg filled"></div><div class="limit-seg"></div></div>
+            </div>
+          </div>
+          <div id="loan-rows" style="display:flex; flex-direction:column; gap:12px;"></div>
+          <div class="rule"></div>
+          <p class="hist-title" style="margin-top:0;">Histórico</p>
+          <div class="table-wrap">
+            <div class="t-row t-head" style="grid-template-columns:2fr 1fr 1fr 1fr;">
+              <span>Item</span><span>Retirada</span><span>Devolução</span><span>Situação</span>
+            </div>
+            <div class="t-row t-body-row" style="grid-template-columns:2fr 1fr 1fr 1fr;">
+              <span>Dock USB-C Anker</span><span style="color:#7C86A2">20/ago</span><span style="color:#7C86A2">28/ago</span><span style="color:#5FD3AA">No prazo</span>
+            </div>
+            <div class="t-row t-body-row" style="grid-template-columns:2fr 1fr 1fr 1fr;">
+              <span>ThinkPad T14</span><span style="color:#7C86A2">02/jul</span><span style="color:#7C86A2">20/jul</span><span style="color:#E08A90">Atraso de 3 dias</span>
+            </div>
+            <div class="t-row t-body-row" style="grid-template-columns:2fr 1fr 1fr 1fr;">
+              <span>Adaptador HDMI Belkin</span><span style="color:#7C86A2">10/jun</span><span style="color:#7C86A2">17/jun</span><span style="color:#5FD3AA">No prazo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 05 · OPERAÇÕES -->
+<!-- ============================================================ -->
+<section class="view" id="s5" data-title="Empréstimos em aberto" hidden>
+    <div class="app-shell tall">
+      <aside class="sidebar" id="sidebar-5"></aside>
+      <div class="main">
+        <header class="app-header">
+          <label class="search" style="max-width:400px;"><svg class="icon" width="15" height="15"><use href="#i-search"/></svg><input class="search-input" id="ops-search" type="search" placeholder="Buscar por item, pessoa ou patrimônio…" aria-label="Buscar por item, pessoa ou patrimônio"></label>
+          <div class="header-spacer"></div>
+          <button class="header-btn" id="go-register-btn" type="button">Cadastrar equipamento <svg class="icon" width="14" height="14"><use href="#i-plus"/></svg></button>
+        </header>
+        <div class="content">
+          <div class="page-title">
+            <h1>Empréstimos em aberto</h1>
+            <span class="page-count">21 itens fora · atualizado agora</span>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-card"><p class="lbl">Em aberto</p><p class="val" id="stat-open">21</p></div>
+            <div class="stat-card"><p class="lbl">Vencem em 3 dias</p><p class="val">4</p></div>
+            <div class="stat-card alert"><p class="lbl">Em atraso</p><p class="val" id="stat-late">3</p></div>
+            <div class="stat-card"><p class="lbl">Em manutenção</p><p class="val">2</p></div>
+          </div>
+          <div class="chips-row">
+            <button class="chip active">Todos</button>
+            <button class="chip">Em atraso</button>
+            <button class="chip">Vencem esta semana</button>
+            <button class="chip">Notebooks</button>
+          </div>
+          <div class="table-wrap">
+            <div class="t-row t-head" style="grid-template-columns:1.3fr 1.1fr 120px 120px 150px 110px; padding:12px 18px;">
+              <span>Item</span><span>Colaborador</span><span>Retirada</span><span>Prazo</span><span>Situação</span><span></span>
+            </div>
+            <div id="ops-rows"></div>
+          </div>
+          <div class="pagination">
+            <span class="info" id="ops-pagination">7 de 21 empréstimos</span>
+            <div class="btns">
+              <button class="btn btn-secondary btn-table" id="ops-prev" type="button" disabled>Anterior</button>
+              <button class="btn btn-secondary btn-table" id="ops-next" type="button">Próximo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 06 · CADASTRAR EQUIPAMENTO -->
+<!-- ============================================================ -->
+<section class="view" id="s6" data-title="Cadastrar equipamento" hidden>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar-6"></aside>
+      <div class="main">
+        <header class="app-header">
+          <div class="breadcrumb">
+            <a href="#s5">Operações</a>
+            <svg class="icon" width="12" height="12"><use href="#i-caretright"/></svg>
+            <span class="current">Cadastrar equipamento</span>
+          </div>
+        </header>
+        <div class="content">
+          <div class="register-grid">
+            <div>
+              <h1 style="font-size:24px; font-weight:600; margin:0 0 4px;">Cadastrar equipamento</h1>
+              <p class="form-note" style="margin-bottom:22px;">Um registro por unidade física.</p>
+              <div class="register-form-inner">
+                <div class="field span2">
+                  <label>Nome</label>
+                  <input class="input" id="reg-nome" placeholder="Ex.: MacBook Air 13&quot; M2" value="MacBook Air 13&quot; M2">
+                </div>
+                <div class="field">
+                  <label>Categoria</label>
+                  <div class="select-wrap">
+                    <select class="input" id="reg-categoria">
+                      <option>Notebook</option><option>Monitor</option><option>Câmera</option><option>Acessório</option><option>Projetor</option>
+                    </select>
+                    <svg class="icon" width="13" height="13"><use href="#i-caretdown"/></svg>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Patrimônio</label>
+                  <input class="input" id="reg-pat" placeholder="PAT-0000" value="PAT-1204">
+                </div>
+                <div class="field">
+                  <label>Número de série</label>
+                  <input class="input" id="reg-serie" placeholder="Ex.: C02F...">
+                </div>
+                <div class="field">
+                  <label>Local de retirada</label>
+                  <input class="input" id="reg-local" placeholder="Ex.: Balcão · 2º andar" value="Balcão · 2º andar">
+                </div>
+                <div class="field span2">
+                  <label>Situação inicial</label>
+                  <div class="segmented" id="reg-situacao">
+                    <button class="active" data-val="disponivel">Disponível</button>
+                    <button data-val="manutencao">Em manutenção</button>
+                    <button data-val="fora">Fora de uso</button>
+                  </div>
+                  <p class="form-note">Manutenção não fica disponível. Fora de uso sai do catálogo.</p>
+                </div>
+                <div class="field span2">
+                  <label>Observações <span class="opt">(opcional)</span></label>
+                  <textarea class="input" id="reg-obs" placeholder="Notas internas sobre o item…"></textarea>
+                </div>
+              </div>
+              <div class="form-message span2" id="reg-message" role="status" aria-live="polite" hidden></div>
+              <div class="form-actions">
+                <button class="btn btn-primary" id="reg-submit" type="button">Cadastrar</button>
+                <button class="btn btn-secondary" id="reg-submit-another" type="button">Cadastrar e adicionar outro</button>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:20px;">
+              <div>
+                <p class="preview-title">Prévia no catálogo</p>
+                <div class="equip-card">
+                  <div class="equip-card-top">
+                    <div class="equip-icon"><svg class="icon" width="20" height="20"><use href="#i-laptop"/></svg></div>
+                    <span class="pill pill-ok" id="preview-pill">Disponível</span>
+                  </div>
+                  <p class="equip-name" id="preview-nome">MacBook Air 13" M2</p>
+                  <p class="equip-meta" id="preview-meta">Notebook · PAT-1204</p>
+                  <p class="equip-footer" style="color:#8AA6EE;">Solicitar →</p>
+                </div>
+              </div>
+              <div class="side-card">
+                <h3 style="font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:#5E6884; font-weight:400;">Últimos cadastros</h3>
+                <div class="recent-row"><span class="n">Sony A7 III</span><span class="d">18/set</span></div>
+                <div class="recent-row"><span class="n">Dell UltraSharp 27"</span><span class="d">12/set</span></div>
+                <div class="recent-row"><span class="n">LG UltraFine 24"</span><span class="d">05/set</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- biblioteca de autenticação (chave pública) + configuração + app -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
