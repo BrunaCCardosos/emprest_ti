@@ -172,7 +172,6 @@ const state = {
     ops:     {chip:'Todos', query:''},
   },
   opsPage: 1,
-  examples: {catalogCount:''},
   pendingItem: null,
 };
 
@@ -304,11 +303,11 @@ function renderCatalog(){
 
   const count = byId('catalog-count');
   if(count){
-    const filtered = filter.chip !== 'Todos' || filter.onlyAvailable || !!filter.query;
+    const filtered = filter.chip !== 'Todos' || filter.onlyAvailable || !!filter.query.trim();
     const available = state.catalog.filter(function(item){ return item.state === 'ok'; }).length;
     count.textContent = filtered
       ? items.length + ' de ' + state.catalog.length + ' equipamentos · ' + available + ' disponíveis'
-      : state.examples.catalogCount;
+      : state.catalog.length + ' equipamentos · ' + available + ' disponíveis agora';
   }
 
   syncChips('#s2 .chips-row', filter.chip, filter.onlyAvailable);
@@ -848,9 +847,6 @@ function wireNavigation(){
 
 /* ---------- 13 · inicialização ---------- */
 function boot(){
-  const count = byId('catalog-count');
-  if(count) state.examples.catalogCount = count.textContent.trim();
-
   state.pendingItem = state.catalog.find(function(item){ return item.pat === 'PAT-1042'; }) || state.catalog[0] || null;
 
   renderCatalog();

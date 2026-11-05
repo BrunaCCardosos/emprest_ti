@@ -5,6 +5,10 @@ Se qualquer item falhar, corrija antes de entregar — não relate a tarefa como
 concluída com um item pendente. Marque mentalmente cada seção; não pule para
 "Regras de negócio" sem passar por "Segurança" e "Multi-tenancy" antes.
 
+## Catálogo do protótipo
+
+- Execute `node --test tests/catalogo.test.cjs` para conferir os critérios de aceite do catálogo com os dados de demonstração. O teste usa um DOM simulado, sem rede ou banco.
+
 ## Arquitetura
 - [ ] Nenhum Server Component busca dado direto do Prisma — todo acesso passa por
       procedimento tRPC.
