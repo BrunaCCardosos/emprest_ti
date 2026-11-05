@@ -1,5 +1,7 @@
 # Testes
 
+> Leitor: agente.
+
 ## Quando
 
 Ao escrever ou executar testes ou ao reunir evidências para uma spec.

@@ -30,7 +30,7 @@
   body{
     background:var(--page);
     color:var(--color-text);
-    font-family:"DM Sans", system-ui, sans-serif;
+    font-family:"Open Sans", system-ui, sans-serif;
     font-weight:400;
     -webkit-font-smoothing:antialiased;
       }
@@ -152,10 +152,10 @@
   .catalog-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:18px;}
   .equip-card{
     border:1px solid var(--border-card); border-radius:14px; background:var(--color-surface);
-    padding:18px; display:flex; flex-direction:column; gap:12px; transition:border-color 160ms ease-out, transform 160ms ease-out, box-shadow 160ms ease-out;
+    padding:18px; display:flex; flex-direction:column; gap:12px; transition:border-color 160ms ease-out;
   }
   .equip-card.clickable{cursor:pointer;}
-  .equip-card.clickable:hover{border-color:#4B62CF; transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,0.35);}
+  .equip-card.clickable:hover{border-color:#3C5DBE;}
   .equip-card.clickable:focus-visible{outline:2px solid #6C86F2; outline-offset:2px;}
   .equip-card-top{display:flex; align-items:flex-start; justify-content:space-between;}
   .equip-icon{width:40px; height:40px; border-radius:9px; background:var(--surface-sunken); display:flex; align-items:center; justify-content:center; color:#9DB1F8;}

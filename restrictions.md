@@ -1,5 +1,7 @@
 # Instruções de arquitetura — projeto de empréstimo de equipamentos internos
 
+> Leitor: agente.
+
 Você está trabalhando num monolito Next.js (App Router) com tRPC, Prisma e Supabase,
 hospedado na Vercel (plano Hobby). Antes de escrever qualquer código, siga estas
 regras sem exceção. Se um pedido do usuário conflitar com alguma delas, avise antes
@@ -41,6 +43,11 @@ de implementar.
   `?pgbouncer=true&connection_limit=1`). `DIRECT_URL` (porta 5432) é só para
   migration.
 - Migration roda no CI (`prisma migrate deploy`), NUNCA no boot da aplicação.
+
+## Produção
+
+- Mudanças na branch de produção passam por branch de trabalho e pull request. A integração na branch de produção cabe ao responsável pelo repositório.
+- O agente trabalha com dados locais ou descartáveis. Deploy, configuração da Vercel e operações no Supabase de produção cabem ao operador.
 
 ## Limites operacionais (Hobby + serverless)
 - Nenhuma operação pode depender de rodar por mais de 60s — desenhe importação e

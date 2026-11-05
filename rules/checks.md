@@ -1,5 +1,7 @@
 # Checklist de verificação — antes de finalizar qualquer tarefa
 
+> Leitor: agente.
+
 Rode este checklist contra o código que você acabou de escrever ou alterar.
 Se qualquer item falhar, corrija antes de entregar — não relate a tarefa como
 concluída com um item pendente. Marque mentalmente cada seção; não pule para
