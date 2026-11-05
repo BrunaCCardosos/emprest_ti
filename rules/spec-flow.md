@@ -1,5 +1,7 @@
 # Fluxo de specs
 
+> Leitor: agente.
+
 ## Nova funcionalidade ou mudança de comportamento
 
 1. Crie ou atualize a pasta `docs/specs/<NNN-nome>/` da funcionalidade. Use o próximo número disponível para uma spec nova e preserve o identificador das specs existentes.

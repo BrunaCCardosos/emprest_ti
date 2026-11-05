@@ -1,5 +1,7 @@
 # Passagem de contexto
 
+> Leitores: agente e operador.
+
 ## Quando
 
 Ao encerrar uma tarefa incompleta ou passar trabalho para outra sessão ou pessoa.

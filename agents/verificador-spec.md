@@ -26,7 +26,7 @@ Não edite arquivos, código, testes ou configurações. Não faça commits. Dev
 
 - **ATENDIDO** quando um teste pertinente que cita o ID passa e comprova o critério.
 - **REPROVADO** quando a evidência contradiz o critério ou o teste pertinente falha.
-- **SEM TESTE** quando não existe teste pertinente que cite o ID. Se o teste existe e não pôde rodar, registre **SEM EXECUÇÃO**.
+- **SEM TESTE** quando não existe teste ativo e pertinente que cite o ID. Testes comentados ou desabilitados contam como ausentes. Use **SEM EXECUÇÃO** quando o teste está ativo e um bloqueio impede sua execução.
 - **AMBÍGUO** quando falta uma decisão para avaliar o critério. Informe a pergunta pendente.
 - **OUTRO REPOSITÓRIO** quando a spec atribui expressamente a prova a outro repositório. O agente principal precisa obter essa evidência antes de fechar a spec.
 

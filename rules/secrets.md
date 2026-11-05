@@ -1,5 +1,7 @@
 # Segredos e configuração
 
+> Leitor: agente.
+
 ## Quando
 
 Ao trabalhar em arquivos `.env*`, autenticação, configuração ou código entregue ao navegador.
