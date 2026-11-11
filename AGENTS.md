@@ -20,6 +20,7 @@ Antes de alterar o projeto, leia `restrictions.md`, `rules/operacao.md` e `docs/
 ## Skills
 
 - `revisar-design-empresti` em `.agents/skills/revisar-design-empresti/SKILL.md` para revisar interfaces contra o design system do projeto.
+- `imagens-equipamentos` em `.agents/skills/imagens-equipamentos/SKILL.md` para preparar e validar fotos de equipamentos do Pixabay.
 
 ## Ambiente
 

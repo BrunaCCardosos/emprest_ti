@@ -9,6 +9,10 @@ node_modules/
 out/
 build/
 coverage/
+public/app.js
+public/style.css
+*.tsbuildinfo
+next-env.d.ts
 
 # logs e editores
 *.log

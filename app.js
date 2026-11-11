@@ -1,10 +1,8 @@
 /* =========================================================================
    EmpresTI — front-end do protótipo (telas 01–06)
    -------------------------------------------------------------------------
-   Autenticação  Supabase Auth (e-mail + senha) com a chave PÚBLICA definida
-                 em config.js. persistSession:false — a sessão vive em memória
-                 enquanto a página está aberta e nunca é gravada em
-                 localStorage/sessionStorage.
+   Autenticação  Supabase Auth por tRPC quando servido pelo Next.js.
+                 A abertura do protótipo estático mantém a sessão em memória.
    Fluxo         tela de login (#s1) → app. As demais telas só abrem com sessão
                  ativa; uma tela por vez, roteada pelo hash da URL. Telas de
                  Operações (#s5, #s6) exigem perfil de Operações.
@@ -12,15 +10,21 @@
                  regras do PRD: até 3 itens simultâneos por pessoa, prazo de 14
                  dias, atraso bloqueia nova solicitação e item em manutenção
                  não fica disponível.
-   Dados         de exemplo (docs/layout.md). Não há API tRPC neste pacote: o
-                 cadastro de equipamento real é gravado pelo procedimento tRPC
-                 da aplicação Next.js; aqui a tela valida o formulário e
-                 mantém a prévia do catálogo.
+   Dados         catálogo e solicitações do servidor no Next.js. O protótipo
+                 estático mantém os exemplos usados nos testes do catálogo.
    ========================================================================= */
 
 /* ---------- 0 · utilidades ---------- */
 function byId(id){ return document.getElementById(id); }
 function qsa(selector, root){ return Array.prototype.slice.call((root || document).querySelectorAll(selector)); }
+
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>]/g, function(char){
+    return {'&':'&amp;', '<':'&lt;', '>':'&gt;'}[char];
+  });
+}
+
+function escapeAttribute(value){ return escapeHtml(value).replace(/"/g, '&quot;'); }
 
 function initialsOf(name){
   const parts = String(name || '').trim().split(/[\s._@-]+/).filter(Boolean);
@@ -78,6 +82,7 @@ function emptyState(text){
 /* ---------- 1 · configuração pública + cliente de autenticação ---------- */
 const CONFIG = window.EMPRESTI_CONFIG || {};
 const SUPA_LIB = window.supabase;
+const SERVER_MODE = !!document.documentElement?.hasAttribute('data-empresti-server');
 const NETWORK_MSG = 'Não foi possível falar com o Supabase. Verifique a conexão e sirva a pasta por HTTP (ex.: npx serve docs): abrir o arquivo direto (file://) pode ser bloqueado pelo navegador.';
 
 let auth = null;
@@ -94,8 +99,23 @@ function createAuthClient(){
   return SUPA_LIB.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, { auth: authOptions });
 }
 
-auth = createAuthClient();
-const AUTH_AVAILABLE = !!auth;
+auth = SERVER_MODE ? null : createAuthClient();
+const AUTH_AVAILABLE = SERVER_MODE || !!auth;
+
+async function callServer(procedure, input, mutation){
+  const payload = JSON.stringify({json: input ?? null});
+  const url = '/api/trpc/' + procedure + (mutation ? '' : '?input=' + encodeURIComponent(payload));
+  const response = await fetch(url, mutation
+    ? {method:'POST', headers:{'content-type':'application/json'}, body:payload, cache:'no-store'}
+    : {cache:'no-store'});
+  const reply = await response.json().catch(function(){ return {}; });
+  if(!response.ok || reply.error){
+    const error = new Error(reply.error?.json?.message || 'Não foi possível falar com o EmpresTI. Tente novamente.');
+    error.code = reply.error?.json?.data?.code;
+    throw error;
+  }
+  return reply.result?.data?.json;
+}
 
 /* ---------- 2 · regras de negócio (PRD) ---------- */
 const MAX_ITEMS = 3;            // máximo de itens simultâneos por colaborador
@@ -134,6 +154,7 @@ const CATALOG_CHIPS = {
   'Notebooks':  function(item){ return item.category === 'Notebook'; },
   'Monitores':  function(item){ return item.category === 'Monitor'; },
   'Câmeras':    function(item){ return item.category === 'Câmera'; },
+  'Cabos':      function(item){ return item.category === 'Cabo'; },
   'Acessórios': function(item){ return item.category === 'Acessório'; },
 };
 
@@ -175,6 +196,75 @@ const state = {
   pendingItem: null,
 };
 
+const SERVER_CATEGORIES = {
+  NOTEBOOK:['Notebook', 'i-laptop'], MONITOR:['Monitor', 'i-monitor'],
+  CAMERA:['Câmera', 'i-camera'], CABLE:['Cabo', 'i-usb'],
+  ACCESSORY:['Acessório', 'i-usb'], PROJECTOR:['Projetor', 'i-monitor'],
+};
+const serverDate = new Intl.DateTimeFormat('pt-BR', {timeZone:'America/Sao_Paulo', dateStyle:'short'});
+
+function serverSession(profile){
+  return profile ? {user:{email:profile.email, user_metadata:{full_name:profile.name}, app_metadata:{role:profile.role}}} : null;
+}
+
+async function loadServerData(){
+  const active = session;
+  try {
+    const equipment = await callServer('catalog.list');
+    const loans = await callServer('loans.mine');
+    if(session !== active) return;
+    const now = Date.now();
+    const due = serverDate.format(new Date(now + LOAN_DAYS * 86400000));
+    state.catalog = equipment.map(function(item){
+      const [category, icon] = SERVER_CATEGORIES[item.category];
+      return {
+        icon, category, pat:item.patrimony, name:item.name, photoUrl:item.photoUrl,
+        meta:category + ' · ' + item.patrimony, dueLabel:due,
+        state:{AVAILABLE:'ok', MAINTENANCE:'maint', BORROWED:'borrowed'}[item.status],
+      };
+    });
+    state.loans = loans.map(function(loan){
+      const start = Date.parse(loan.borrowedAt);
+      const deadline = Date.parse(loan.dueDate);
+      return {
+        icon:SERVER_CATEGORIES[loan.category][1], name:loan.name, pat:loan.patrimony,
+        meta:loan.patrimony + ' · retirado em ' + serverDate.format(start),
+        dueLabel:serverDate.format(deadline), late:deadline < now,
+        progress:Math.max(0, Math.min(1, (now - start) / (deadline - start))),
+      };
+    });
+    if(state.pendingItem){
+      const previous = state.pendingItem;
+      state.pendingItem = state.catalog.find(function(item){ return item.pat === previous.pat; }) ||
+        {...previous, state:'unavailable'};
+      renderDetail();
+    }
+    renderCatalog();
+    renderLoans();
+    renderSidebars();
+    setMessage(byId('catalog-load-message'), '', '');
+  } catch(error) {
+    if(session !== active) return;
+    if(error.code === 'UNAUTHORIZED'){
+      clearServerSession();
+      setMessage(byId('login-message'), 'warn', 'Sua sessão expirou. Entre novamente.');
+    } else {
+      setMessage(byId('catalog-load-message'), 'error', error.message);
+      showToast(error.message, 'error');
+    }
+  }
+}
+
+function clearServerSession(){
+  session = null;
+  state.catalog = [];
+  state.loans = [];
+  state.pendingItem = null;
+  renderCatalog();
+  renderLoans();
+  applySession();
+}
+
 /* ---------- 4 · sidebar ---------- */
 function sessionUser(){
   if(!session || !session.user) return null;
@@ -194,6 +284,7 @@ function sessionUser(){
    (ADMIN = Operações) e é imposto no servidor pelo tRPC — aqui só decide o que
    mostrar. */
 function isOps(){
+  if(SERVER_MODE) return false;
   if(!session || !session.user) return false;
   const raw = (session.user.app_metadata && session.user.app_metadata.role) ||
               (session.user.user_metadata && session.user.user_metadata.role) || '';
@@ -225,8 +316,8 @@ function renderSidebar(config){
     html += `</div>`;
   });
   html += `<div class="sidebar-user">
-      <div class="avatar">${user.initials}</div>
-      <div class="user-meta"><div class="name" title="${user.email || ''}">${user.name}</div><div class="role">${user.role}</div></div>
+      <div class="avatar">${escapeHtml(user.initials)}</div>
+      <div class="user-meta"><div class="name" title="${escapeAttribute(user.email)}">${escapeHtml(user.name)}</div><div class="role">${user.role}</div></div>
       <button class="logout-btn" type="button" data-action="logout">Sair</button>
     </div>`;
   el.innerHTML = html;
@@ -245,20 +336,21 @@ function catalogCard(item){
   }
   if(item.state === 'borrowed'){
     pill = '<span class="pill pill-borrowed">Emprestado</span>';
-    footer = `<span style="color:#5E6884;">Com ${item.with} · devolve ${item.due}</span>`;
+    if(item.with) footer = `<span style="color:#5E6884;">Com ${escapeHtml(item.with)} · devolve ${escapeHtml(item.due)}</span>`;
   }
   if(item.state === 'maint'){
     pill = '<span class="pill pill-maint">Manutenção</span>';
-    footer = `<span style="color:#5E6884;">${item.note}</span>`;
+    if(item.note) footer = `<span style="color:#5E6884;">${escapeHtml(item.note)}</span>`;
   }
   card.className = 'equip-card' + clickable;
   card.innerHTML = `
+      ${item.photoUrl ? `<img class="equip-photo" src="${escapeAttribute(item.photoUrl)}" alt="${escapeAttribute(item.name)}" width="800" height="600" loading="lazy">` : ''}
       <div class="equip-card-top">
         <div class="equip-icon"><svg class="icon" width="20" height="20"><use href="#${item.icon}"/></svg></div>
         ${pill}
       </div>
-      <p class="equip-name">${item.name}</p>
-      <p class="equip-meta">${item.meta}</p>
+      <p class="equip-name">${escapeHtml(item.name)}</p>
+      <p class="equip-meta">${escapeHtml(item.meta)}</p>
       <p class="equip-footer">${footer}</p>`;
   if(item.state === 'ok'){
     const open = function(){ state.pendingItem = item; renderDetail(); location.hash = '#s3'; };
@@ -325,11 +417,28 @@ function renderDetail(){
   set('detail-crumb-cat', item.category);
   set('detail-cat', item.category);
   set('detail-pat', item.pat);
+  if(SERVER_MODE) set('detail-pickup-date', 'Hoje, ' + serverDate.format(new Date()));
   set('detail-due', item.dueLabel || DUE_LABEL);
+  const status = byId('detail-status');
+  if(status && SERVER_MODE){
+    const display = {
+      ok:['Disponível', 'ok'], borrowed:['Emprestado', 'borrowed'],
+      maint:['Manutenção', 'maint'], unavailable:['Indisponível', 'out'],
+    }[item.state];
+    status.textContent = display[0];
+    status.className = 'pill pill-' + display[1];
+  }
   const icon = byId('detail-icon');
   if(icon) icon.setAttribute('href', '#' + item.icon);
+  const photo = byId('detail-photo');
+  if(photo){
+    photo.hidden = !item.photoUrl;
+    if(item.photoUrl){ photo.src = item.photoUrl; photo.alt = item.name; }
+    else photo.removeAttribute('src');
+    if(icon) icon.parentElement.toggleAttribute('hidden', !!item.photoUrl);
+  }
   // descrição e histórico de exemplo existem só para o MacBook Pro 14"
-  const demo = item.pat === 'PAT-1042';
+  const demo = !SERVER_MODE && item.pat === 'PAT-1042';
   set('detail-desc', demo ? DETAIL_DEMO_DESC : item.category + ' · ' + item.pat + '. A retirada é feita no balcão de Operações.');
   const hist = byId('detail-history');
   if(hist) hist.hidden = !demo;
@@ -353,13 +462,13 @@ function renderLoanRow(loan){
   row.className = 'loan-row';
   row.innerHTML = `
       <div class="loan-icon"><svg class="icon" width="21" height="21"><use href="#${loan.icon}"/></svg></div>
-      <div class="loan-info"><p class="n">${loan.name}</p><p class="m">${loan.meta}</p></div>
+      <div class="loan-info"><p class="n">${escapeHtml(loan.name)}</p><p class="m">${escapeHtml(loan.meta)}</p></div>
       <div class="loan-deadline">
-        <p class="lbl">Devolver até ${loan.dueLabel}</p>
+        <p class="lbl">Devolver até ${escapeHtml(loan.dueLabel)}</p>
         <div class="deadline-track"><div class="deadline-fill" style="width:${loan.progress * 100}%"></div></div>
       </div>
-      <button class="btn btn-row" type="button">Devolver</button>`;
-  row.querySelector('.btn-row').addEventListener('click', function(){ returnLoan(loan, row); });
+      ${SERVER_MODE ? '' : '<button class="btn btn-row" type="button">Devolver</button>'}`;
+  if(!SERVER_MODE) row.querySelector('.btn-row').addEventListener('click', function(){ returnLoan(loan, row); });
   return row;
 }
 
@@ -394,7 +503,8 @@ function renderLoanCounters(){
 
   const button = byId('open-dialog-btn');
   if(button){
-    const blocked = state.loans.length >= MAX_ITEMS || hasOverdue();
+    const blocked = state.loans.length >= MAX_ITEMS || hasOverdue() ||
+      (SERVER_MODE && state.pendingItem?.state !== 'ok');
     button.disabled = blocked;
     button.style.opacity = blocked ? '.45' : '';
   }
@@ -527,7 +637,7 @@ function returnOpRow(data, row){
 function openLoanDialog(){
   const backdrop = byId('dialog-backdrop');
   const item = state.pendingItem;
-  if(!backdrop || !item) return;
+  if(!backdrop || !item || (SERVER_MODE && item.state !== 'ok')) return;
 
   if(state.loans.length >= MAX_ITEMS){
     setMessage(byId('detail-message'), 'warn',
@@ -543,7 +653,7 @@ function openLoanDialog(){
   const total = state.loans.length + 1;
   const body = byId('dialog-body');
   if(body){
-    body.innerHTML = 'Você está pedindo <strong style="color:#E6EAF6;">' + item.name + ' (' + item.pat + ')</strong>, ' +
+    body.innerHTML = 'Você está pedindo <strong style="color:#E6EAF6;">' + escapeHtml(item.name) + ' (' + escapeHtml(item.pat) + ')</strong>, ' +
       'com devolução prevista para <strong style="color:#E6EAF6;">' + (item.dueLabel || DUE_LABEL) + '</strong>.';
   }
   const note = byId('dialog-note');
@@ -560,10 +670,39 @@ function closeLoanDialog(){
   if(backdrop) backdrop.classList.remove('open');
 }
 
-function confirmLoan(){
+let submittingLoan = false;
+async function confirmLoan(){
   const item = state.pendingItem;
   closeLoanDialog();
   if(!item || state.loans.length >= MAX_ITEMS || hasOverdue()) return;
+  if(SERVER_MODE){
+    if(submittingLoan) return;
+    submittingLoan = true;
+    const active = session;
+    const button = byId('open-dialog-btn');
+    if(button) button.disabled = true;
+    try {
+      await callServer('loans.request', {patrimony:item.pat}, true);
+      if(session !== active) return;
+      await loadServerData();
+      if(session !== active) return;
+      location.hash = '#s4';
+      showToast('Pedido confirmado! Retire no balcão de Operações.', 'ok');
+    } catch(error) {
+      if(session !== active) return;
+      if(error.code === 'CONFLICT' || error.code === 'PRECONDITION_FAILED') await loadServerData();
+      if(error.code === 'UNAUTHORIZED'){
+        clearServerSession();
+        setMessage(byId('login-message'), 'warn', 'Sua sessão expirou. Entre novamente.');
+      } else if(session === active) {
+        setMessage(byId('detail-message'), 'warn', error.message);
+      }
+    } finally {
+      submittingLoan = false;
+      renderLoanCounters();
+    }
+    return;
+  }
 
   state.loans.push({
     icon: item.icon,
@@ -668,6 +807,7 @@ function resolveRoute(){
   const wanted = ROUTES.indexOf(location.hash) !== -1 ? location.hash : '';
   if(!session) return LOGIN_ROUTE;                              // sem sessão: só o login
   if(!wanted || wanted === LOGIN_ROUTE) return HOME_ROUTE;      // logado: login não faz sentido
+  if(SERVER_MODE && wanted === '#s3' && !state.pendingItem) return HOME_ROUTE;
   if(OPS_ROUTES.indexOf(wanted) !== -1 && !isOps()) return HOME_ROUTE;
   return wanted;
 }
@@ -719,6 +859,14 @@ async function handleLogin(event){
   if(submit) submit.disabled = true;
   setMessage(message, 'info', 'Entrando…');
   try {
+    if(SERVER_MODE){
+      session = serverSession(await callServer('auth.signIn', {email, password:senha}, true));
+      if(senhaEl) senhaEl.value = '';
+      setMessage(message, '', '');
+      applySession();
+      await loadServerData();
+      return;
+    }
     const result = await auth.auth.signInWithPassword({email: email, password: senha});
     if(result.error){
       setMessage(message, 'error', isNetworkError(result.error) ? NETWORK_MSG : loginErrorMessage(result.error));
@@ -738,6 +886,14 @@ async function handleLogin(event){
 }
 
 async function handleLogout(){
+  if(SERVER_MODE){
+    try {
+      await callServer('auth.signOut', undefined, true);
+      clearServerSession();
+      setMessage(byId('login-message'), 'info', 'Você saiu da sua conta.');
+    } catch(error) { showToast(error.message, 'error'); }
+    return;
+  }
   try {
     if(auth) await auth.auth.signOut();
   } catch (error) {
@@ -847,6 +1003,11 @@ function wireNavigation(){
 
 /* ---------- 13 · inicialização ---------- */
 function boot(){
+  if(SERVER_MODE){
+    state.catalog = [];
+    state.loans = [];
+    state.ops = [];
+  }
   state.pendingItem = state.catalog.find(function(item){ return item.pat === 'PAT-1042'; }) || state.catalog[0] || null;
 
   renderCatalog();
@@ -857,7 +1018,7 @@ function boot(){
   renderLoanCounters();
   renderDetail();
   updatePreview();
-  applySession();
+  if(!SERVER_MODE) applySession();
 
   wireChips();
   wireSearch();
@@ -865,7 +1026,16 @@ function boot(){
   wireDialog();
   wireNavigation();
 
-  if(auth){
+  if(SERVER_MODE){
+    callServer('auth.session').then(function(profile){
+      session = serverSession(profile);
+      applySession();
+      if(session) return loadServerData();
+    }).catch(function(error){
+      applySession();
+      setMessage(byId('login-message'), 'error', error.message);
+    });
+  } else if(auth){
     auth.auth.onAuthStateChange(function(event, nextSession){
       session = nextSession || null;
       applySession();

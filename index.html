@@ -117,11 +117,14 @@
             <button class="chip">Notebooks</button>
             <button class="chip">Monitores</button>
             <button class="chip">Câmeras</button>
+            <button class="chip server-only">Cabos</button>
             <button class="chip">Acessórios</button>
             <span style="flex:1"></span>
             <button class="chip">Só disponíveis</button>
           </div>
+          <p class="form-message server-only" id="catalog-load-message" role="status" hidden></p>
           <div class="catalog-grid" id="catalog-grid"></div>
+          <p class="photo-credit server-only"><a href="https://pixabay.com/" target="_blank" rel="noopener noreferrer">Fotos: Pixabay</a></p>
         </div>
       </div>
     </div>
@@ -148,10 +151,10 @@
         <div class="content">
           <div class="detail-grid">
             <div>
-              <div class="detail-image"><svg class="icon" width="64" height="64"><use id="detail-icon" href="#i-laptop"/></svg></div>
+              <div class="detail-image"><svg class="icon" width="64" height="64"><use id="detail-icon" href="#i-laptop"/></svg><img id="detail-photo" class="equip-photo" alt="" width="800" height="600" hidden></div>
               <div class="detail-title-row">
                 <h1 id="detail-name">MacBook Pro 14"</h1>
-                <span class="pill pill-ok">Disponível</span>
+                <span class="pill pill-ok" id="detail-status">Disponível</span>
               </div>
               <p class="detail-desc" id="detail-desc">Notebook de alta performance para desenvolvimento e edição. Acompanha carregador USB-C original. Recomendado para uso em escritório e viagens curtas.</p>
               <div class="rule"></div>
@@ -159,7 +162,7 @@
                 <div class="spec-item"><p class="label">Categoria</p><p class="value" id="detail-cat">Notebook</p></div>
                 <div class="spec-item"><p class="label">Patrimônio</p><p class="value" id="detail-pat">PAT-1042</p></div>
                 <div class="spec-item"><p class="label">Local</p><p class="value">Balcão · 2º andar</p></div>
-                <div class="spec-item"><p class="label">Última devolução</p><p class="value">02/set</p></div>
+                <div class="spec-item prototype-only"><p class="label">Última devolução</p><p class="value">02/set</p></div>
               </div>
               <div id="detail-history">
               <p class="hist-title">Histórico</p>
@@ -173,7 +176,7 @@
             <div style="display:flex; flex-direction:column; gap:16px;">
               <div class="side-card">
                 <h3>Pedir emprestado</h3>
-                <div class="side-row"><span>Retirada</span><span class="val">Hoje, 21/set</span></div>
+                <div class="side-row"><span>Retirada</span><span class="val" id="detail-pickup-date">Hoje, 21/set</span></div>
                 <div class="side-row"><span>Prazo padrão</span><span class="val">14 dias</span></div>
                 <div class="side-row"><span>Devolver até</span><span class="val accent" id="detail-due">05/out</span></div>
                 <button class="btn btn-primary" style="width:100%;" id="open-dialog-btn">Pedir emprestado</button>

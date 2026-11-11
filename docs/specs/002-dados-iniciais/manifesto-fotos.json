@@ -1,0 +1,312 @@
+{
+  "reviewedBy": "Operadora do EmpresTI",
+  "reviewedOn": "2026-11-11",
+  "source": "Pixabay",
+  "status": "Aprovado para upload pela operadora",
+  "items": [
+    {
+      "patrimony": "TI-0001",
+      "pixabayId": 3036166,
+      "author": "kirill_makes_pics",
+      "sourceUrl": "https://pixabay.com/photos/computer-laptop-blank-empty-screen-3036166/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0001.jpg",
+      "preparation": "Ajuste proporcional com margens quando necessário.",
+      "width": 800,
+      "height": 600,
+      "sha256": "092A6FFD9B89FC59F480EB602D5DEC4721992CF08E8CE69551BBB2CD9485E2CB"
+    },
+    {
+      "patrimony": "TI-0002",
+      "pixabayId": 5332720,
+      "author": "vickygharat",
+      "sourceUrl": "https://pixabay.com/photos/laptop-white-background-computer-5332720/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0002.jpg",
+      "preparation": "Recorte e redimensionamento proporcional para 800 × 600, com o notebook inteiro. Foto ilustrativa.",
+      "width": 800,
+      "height": 600,
+      "sha256": "E9444540ECEDDC3A8E51DF0AD0352AE4A1A573D4C4FCE8AC66BC72D9DAF2638F"
+    },
+    {
+      "patrimony": "TI-0003",
+      "pixabayId": 1361981,
+      "author": "image4you",
+      "sourceUrl": "https://pixabay.com/photos/notebook-laptop-computer-keyboard-1361981/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0003.jpg",
+      "preparation": "Recorte e redimensionamento proporcional para 800 × 600, com o notebook inteiro. Foto ilustrativa.",
+      "width": 800,
+      "height": 600,
+      "sha256": "1BD8F6C8069FCA5F8D5E540F64D656DF7F9FB8F48124F7E8DAFB13343AC24453"
+    },
+    {
+      "patrimony": "TI-0004",
+      "pixabayId": 789358,
+      "author": "mteresa",
+      "sourceUrl": "https://pixabay.com/photos/portable-mock-up-technology-789358/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0004.jpg",
+      "preparation": "Retoque com ImageGen para remover logotipo e adesivos, seguido de redimensionamento proporcional para 800 × 600. Foto ilustrativa.",
+      "width": 800,
+      "height": 600,
+      "sha256": "95D9F1798CBB7C533ADC438C53B53D95DB6F860244E60D6EDF83EA1593459DBE"
+    },
+    {
+      "patrimony": "TI-0005",
+      "pixabayId": 17768,
+      "author": "PublicDomainPictures",
+      "sourceUrl": "https://pixabay.com/photos/blank-business-computer-desktop-17768/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0005.jpg",
+      "preparation": "Ajuste proporcional com margens quando necessário.",
+      "width": 800,
+      "height": 600,
+      "sha256": "B9AD3A2C2237FDAB6CC7117FDA542E9832D52C2C02C9AF23ACED157CB2CBF274"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 464737,
+      "author": "sebagee",
+      "sourceUrl": "https://pixabay.com/photos/catch-pc-it-apple-inc-computer-464737/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0006.jpg",
+      "preparation": "Retoque com ImageGen para remover o logotipo da foto do Pixabay. Redimensionamento proporcional e recorte lateral para 800 × 600, com tela e base inteiras. Foto ilustrativa.",
+      "width": 800,
+      "height": 600,
+      "sha256": "A3E42AA275FF9A7C7F9698066A26FF5EAC842537EC78BEC400ED447779021B88"
+    },
+    {
+      "patrimony": "TI-0007",
+      "pixabayId": 17894,
+      "author": "PublicDomainPictures",
+      "sourceUrl": "https://pixabay.com/photos/blank-business-computer-desktop-17894/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0007.jpg",
+      "preparation": "Ajuste proporcional com margens quando necessário.",
+      "width": 800,
+      "height": 600,
+      "sha256": "19BA6FE0DC74C77EA80EAAC45C6D5A42ADFC06FC4BB917F01388C7A6D817F62C"
+    },
+    {
+      "patrimony": "TI-0008",
+      "pixabayId": 2202226,
+      "author": "WikimediaImages",
+      "sourceUrl": "https://pixabay.com/photos/hdmi-connector-cable-plug-2202226/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0008.jpg",
+      "preparation": "Recorte do conector para excluir a inscrição e ajuste proporcional.",
+      "width": 800,
+      "height": 600,
+      "sha256": "A0CF1CDFF783BA6B63FB14DF58E0FC4DB477C6BE692825BCA2E322781D781D4B"
+    },
+    {
+      "patrimony": "TI-0009",
+      "pixabayId": 4718921,
+      "author": "Aqe",
+      "sourceUrl": "https://pixabay.com/photos/usb-charger-cable-technology-plug-4718921/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0009.jpg",
+      "preparation": "Ajuste proporcional com margens quando necessário.",
+      "width": 800,
+      "height": 600,
+      "sha256": "7EEF51F3408D5DC02181C27102F138B35D0F3F563A89A67A73F49420C06F2C27"
+    },
+    {
+      "patrimony": "TI-0010",
+      "pixabayId": 494649,
+      "author": "blickpixel",
+      "sourceUrl": "https://pixabay.com/photos/network-cable-cable-patch-494649/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0010.jpg",
+      "preparation": "Ajuste proporcional com margens quando necessário.",
+      "width": 800,
+      "height": 600,
+      "sha256": "9E01E47E97DDC3A259269519499370AE592D46F6D5B779D501E3758E7F26D83D"
+    },
+    {
+      "patrimony": "TI-0011",
+      "pixabayId": 1219748,
+      "author": "Aksa2011",
+      "sourceUrl": "https://pixabay.com/photos/camera-webcam-computer-internet-1219748/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0011.jpg",
+      "preparation": "Retoque com ImageGen a partir da foto do Pixabay, com remoção de inscrições e ajuste proporcional.",
+      "width": 800,
+      "height": 600,
+      "sha256": "8CAF873A7AFEB53378341DE87139F54EC75BC667C0306CE28845BA28093C73F0"
+    },
+    {
+      "patrimony": "TI-0012",
+      "pixabayId": 5545571,
+      "author": "Farbsynthese",
+      "sourceUrl": "https://pixabay.com/photos/camera-lens-zoom-digital-equipment-5545571/",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "photoPath": "suporte_ti/TI-0012.jpg",
+      "preparation": "Retoque com ImageGen a partir da foto do Pixabay, com remoção de inscrições e ajuste proporcional.",
+      "width": 800,
+      "height": 600,
+      "sha256": "CC3FD8B60B781A9731E82BB28353967E9D4E27097C7D367E29BB06E9B461DC7C"
+    }
+  ],
+  "rejected": [
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 1207886,
+      "reason": "Tela ou base cortada, com marca ou conteúdo visível"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 1283672,
+      "reason": "Tela ou base cortada, com marca ou conteúdo visível"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 468148,
+      "reason": "Tela ou base cortada, com marca ou conteúdo visível"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 820390,
+      "reason": "Tela ou base cortada, com marca ou conteúdo visível"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 1839406,
+      "reason": "Tela com conteúdo visível"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 1863880,
+      "reason": "Tela com conteúdo visível"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 462911,
+      "reason": "Tela com conteúdo visível"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 606761,
+      "reason": "Tela com conteúdo visível"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 985478,
+      "reason": "Tela com conteúdo visível"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 1584223,
+      "reason": "Outro tipo de equipamento"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 2059937,
+      "reason": "Outro tipo de equipamento"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 2128961,
+      "reason": "Outro tipo de equipamento"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 2128962,
+      "reason": "Outro tipo de equipamento"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 2354948,
+      "reason": "Outro tipo de equipamento"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 272270,
+      "reason": "Outro tipo de equipamento"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 3737336,
+      "reason": "Outro tipo de equipamento"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 992630,
+      "reason": "Outro tipo de equipamento"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 2568755,
+      "reason": "Monitor pequeno no quadro ou cenário com texto ou logotipo"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 2831949,
+      "reason": "Monitor pequeno no quadro ou cenário com texto ou logotipo"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 3109537,
+      "reason": "Monitor pequeno no quadro ou cenário com texto ou logotipo"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 407122,
+      "reason": "Logotipo e enquadramento com mais distrações que a selecionada"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 820277,
+      "reason": "Logotipo e enquadramento com mais distrações que a selecionada"
+    },
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 699319,
+      "reason": "Mão de uma pessoa visível"
+    },
+    {
+      "pixabayId": 2667165,
+      "reason": "Pouco contraste com o fundo preto e inscrição visível na moldura."
+    },
+    {
+      "pixabayId": 5029868,
+      "reason": "Enquadramento muito inclinado, com marcas e adesivo legíveis."
+    }
+  ],
+  "replaced": [
+    {
+      "patrimony": "TI-0006",
+      "pixabayId": 1140699,
+      "reason": "Ângulo de cima dificulta reconhecer a tela e a base."
+    },
+    {
+      "patrimony": "TI-0002",
+      "pixabayId": 791032,
+      "reason": "Ângulo de trás esconde a tela."
+    },
+    {
+      "patrimony": "TI-0003",
+      "pixabayId": 2982270,
+      "reason": "Ângulo de cima e acessórios tiram o foco do notebook."
+    },
+    {
+      "patrimony": "TI-0004",
+      "pixabayId": 3659998,
+      "reason": "Equipamento fechado e fotografado de perfil."
+    }
+  ],
+  "reviewScope": "25 rejeições nas duas rodadas finais documentadas e quatro versões anteriores substituídas. As buscas exploratórias anteriores não compõem este total."
+}
