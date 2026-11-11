@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server';
 import type { TenantDatabase } from '../tenant-db';
 
 const MAX_OPEN_LOANS = 3;
-const LOAN_DURATION_MS = 14 * 24 * 60 * 60 * 1000;
+const LOAN_DURATION_MS = 13 * 24 * 60 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
 
 export async function requestLoan(db: TenantDatabase, userId: string, patrimony: string) {
