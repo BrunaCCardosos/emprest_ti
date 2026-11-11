@@ -443,6 +443,7 @@ function renderDetail(){
   const hist = byId('detail-history');
   if(hist) hist.hidden = !demo;
   setMessage(byId('detail-message'), '', '');
+  renderLoanCounters();
 }
 
 /* ---------- 6 · meus empréstimos (tela 04) ---------- */
@@ -503,7 +504,7 @@ function renderLoanCounters(){
 
   const button = byId('open-dialog-btn');
   if(button){
-    const blocked = state.loans.length >= MAX_ITEMS || hasOverdue() ||
+    const blocked = submittingLoan || state.loans.length >= MAX_ITEMS || hasOverdue() ||
       (SERVER_MODE && state.pendingItem?.state !== 'ok');
     button.disabled = blocked;
     button.style.opacity = blocked ? '.45' : '';
