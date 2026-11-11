@@ -158,6 +158,13 @@
   .equip-card.clickable:hover{border-color:#3C5DBE;}
   .equip-card.clickable:focus-visible{outline:2px solid #6C86F2; outline-offset:2px;}
   .equip-card-top{display:flex; align-items:flex-start; justify-content:space-between;}
+  html:not([data-empresti-server]) .server-only{display:none;}
+  html[data-empresti-server] .prototype-only{display:none;}
+  .equip-photo{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;border-radius:8px;background:#fff;}
+  .equip-photo[hidden], .detail-image .icon[hidden]{display:none;}
+  .detail-image .equip-photo{height:100%;min-height:0;}
+  .photo-credit{font-size:12px;margin:14px 0 0;}
+  .photo-credit a{color:#9DB1F8;}
   .equip-icon{width:40px; height:40px; border-radius:9px; background:var(--surface-sunken); display:flex; align-items:center; justify-content:center; color:#9DB1F8;}
   .equip-icon .icon{width:20px; height:20px;}
   .equip-name{font-size:14.5px; font-weight:600; margin:0;}

@@ -1,0 +1,37 @@
+{
+  "name": "empresti",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/sync-prototype.cjs && next dev",
+    "build": "node scripts/sync-prototype.cjs && prisma generate && next build",
+    "start": "next start",
+    "test": "node --test tests/catalogo.test.cjs",
+    "test:database": "prisma generate && node --test tests/dados-iniciais.test.cjs && tsx --test tests/solicitar-emprestimo.test.ts",
+    "db:migrate": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3",
+    "@supabase/ssr": "0.8.0",
+    "@supabase/supabase-js": "2.109.0",
+    "@trpc/server": "11.28.0",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "superjson": "2.2.6",
+    "zod": "4.6.7"
+  },
+  "overrides": {
+    "@prisma/config": {
+      "deepmerge-ts": "8.0.0"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "prisma": "6.19.3",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}

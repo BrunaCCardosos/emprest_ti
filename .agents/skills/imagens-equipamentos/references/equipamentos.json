@@ -1,0 +1,14 @@
+[
+  { "patrimony": "TI-0001", "query": "laptop on white desk" },
+  { "patrimony": "TI-0002", "query": "open laptop minimal desk" },
+  { "patrimony": "TI-0003", "query": "laptop closeup keyboard" },
+  { "patrimony": "TI-0004", "query": "closed laptop on table" },
+  { "patrimony": "TI-0005", "query": "computer monitor on desk" },
+  { "patrimony": "TI-0006", "query": "monitor screen office desk" },
+  { "patrimony": "TI-0007", "query": "black computer screen" },
+  { "patrimony": "TI-0008", "query": "hdmi cable" },
+  { "patrimony": "TI-0009", "query": "usb cable white background" },
+  { "patrimony": "TI-0010", "query": "ethernet cable" },
+  { "patrimony": "TI-0011", "query": "webcam" },
+  { "patrimony": "TI-0012", "query": "compact camera on table" }
+]

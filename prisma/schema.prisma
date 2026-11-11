@@ -117,6 +117,7 @@ enum EquipmentCategory {
   CAMERA
   ACCESSORY
   PROJECTOR
+  CABLE
 
   @@map("equipment_category")
 }
@@ -145,6 +146,7 @@ model Equipment {
   serialNumber String?           @map("serial_number")
   /// Local de retirada (ex.: "Balcão · 2º andar").
   location     String?
+  photoPath    String?           @map("photo_path")
   status       EquipmentStatus   @default(AVAILABLE)
   /// Observações internas do cadastro.
   notes        String?
