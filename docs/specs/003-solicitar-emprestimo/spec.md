@@ -1,6 +1,6 @@
 # 003 — Solicitar empréstimo
 
-**Status:** aprovada pela operadora em 2026-11-11. Implementação em andamento.
+**Status:** aprovada pela operadora e verificada em 2026-11-11. Veredito **PRONTA** no [registro da entrega](../../../ENTREGA.md#spec-003--solicitar-empréstimo).
 
 ## Objetivo e escopo
 
@@ -12,6 +12,12 @@ O colaborador autenticado vê os equipamentos do seu tenant, solicita um dispon�
 - As fotos aprovadas vêm do bucket público, pelos caminhos do cadastro da spec 002. O catálogo exibe o crédito “Fotos: Pixabay” com link, conforme a fonte orientada pelo professor.
 - O servidor resolve o tenant e a identidade pelo vínculo da sessão autenticada. O catálogo mostra que um item está emprestado sem revelar o nome de outro colaborador.
 - A conta do professor permanece com zero empréstimos. Validações que criam empréstimos usam contas de teste distintas.
+
+## Exceção de interface aprovada
+
+Em 11 de novembro de 2026, a operadora aprovou manter nesta spec as telas integradas em HTML, CSS e JavaScript do protótipo. A alternativa era adaptar as telas para React Hook Form com `zodResolver`, Tailwind e shadcn/ui e repetir o aceite. Manter a interface atual preserva as telas já conferidas e evita ampliar a prática para uma migração de apresentação.
+
+A exceção vale somente para os dois itens de convenções de interface nesta spec. A API segue o monolito Next.js e o tRPC valida os dados de entrada com Zod no servidor. A [regra de arquitetura](../../../restrictions.md) e o [checklist](../../../rules/checks.md) registram o escopo.
 
 ## Critérios de aceite
 

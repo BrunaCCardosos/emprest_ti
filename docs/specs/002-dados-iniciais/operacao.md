@@ -11,7 +11,7 @@ As etapas de escrita em produção são executadas pela operadora. A preparaçã
 ## Fotos
 
 1. Em Storage, criar o bucket público `equipment-photos` e a pasta `suporte_ti`. Usar um bucket com o mesmo nome configurado na Vercel.
-2. Enviar os 12 JPEGs aprovados para a pasta, seguindo os nomes do [manifesto](manifesto-fotos.json). Se um objeto já existir, conferir a URL e o conteúdo antes de qualquer substituição.
+2. Enviar os 12 JPEGs aprovados para a pasta, seguindo os nomes do [manifesto](manifesto-fotos.json). Ao repetir, conferir a URL e o conteúdo dos objetos existentes e preservá-los. Registrar divergências por caminho para revisão da operadora.
 3. Abrir as 12 URLs públicas em uma janela anônima. O formato é `https://<projeto>.supabase.co/storage/v1/object/public/equipment-photos/suporte_ti/TI-0001.jpg`. Registrar a verificação com os IDs ou caminhos, sem dados de sessão.
 
 ## Conta do professor

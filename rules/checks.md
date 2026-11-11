@@ -79,3 +79,5 @@ concluída com um item pendente. Marque mentalmente cada seção; não pule para
 - [ ] Todo `.input()` de procedimento validado com Zod.
 - [ ] Formulários com React Hook Form + `zodResolver`, reaproveitando o schema Zod do procedimento.
 - [ ] Estilização com Tailwind; componentes via shadcn/ui copiados para o repo (sem biblioteca fechada).
+
+Na spec 003, confira os dois itens de formulário e estilização conforme a [exceção de interface aprovada](../docs/specs/003-solicitar-emprestimo/spec.md#exceção-de-interface-aprovada). Verifique a validação Zod nos procedimentos que recebem entrada.

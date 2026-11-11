@@ -76,3 +76,5 @@ de implementar.
   do procedimento.
 - Estilização com Tailwind; componentes via shadcn/ui (copiados para o repo, não
   importados de biblioteca fechada).
+
+A operadora aprovou uma [exceção de interface para a spec 003](docs/specs/003-solicitar-emprestimo/spec.md#exceção-de-interface-aprovada). As telas dessa spec podem reutilizar o HTML, CSS e JavaScript do protótipo nos dois itens de convenções de formulário e estilização. A validação de entrada com Zod continua obrigatória no tRPC.

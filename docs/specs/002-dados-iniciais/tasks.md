@@ -8,4 +8,4 @@
 - [x] Implementar e testar a carga repetível no PostgreSQL local (CA-01, CA-02 e parte de banco do CA-05). A carga de equipamentos está em `prisma/seed-equipments.sql` e usa as duas migrations já aplicadas. No Docker da porta 5433, foram conferidos 12 equipamentos, nove disponíveis, três em manutenção, 12 caminhos de foto e zero empréstimos. A segunda execução manteve os 12 IDs e caminhos. `node --test tests/dados-iniciais.test.cjs` passou com três testes em banco descartável e `node --test tests/catalogo.test.cjs` passou com sete testes de demonstração.
 - [x] Preparar o [procedimento da operadora](operacao.md) e a rotina de vínculo da conta (CA-04 a CA-07).
 - [x] Executar a rodada de verificação independente local. Veredito **NÃO PRONTA** enquanto as evidências de produção estiverem pendentes.
-- [ ] Reunir evidências de produção e solicitar a rodada final ao verificador (CA-04 a CA-07).
+- [x] Reunir evidências de produção e solicitar a rodada final ao verificador (CA-04 a CA-07). Veredito **PRONTA** no [registro da entrega](../../../ENTREGA.md#spec-002--dados-iniciais).

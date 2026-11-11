@@ -1,6 +1,6 @@
 # 002 — Dados iniciais do EmpresTI
 
-**Status:** escopo e DDL aprovados. Implementação em andamento.
+**Status:** verificada em 2026-11-11. Veredito **PRONTA** no [registro da entrega](../../../ENTREGA.md#spec-002--dados-iniciais).
 
 ## Objetivo
 
