@@ -6,6 +6,7 @@ import path from 'node:path';
 import { after, before, test } from 'node:test';
 import { PrismaClient } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
+import { GET as serveApp } from '../app/route';
 import { findMembership, type Context } from '../src/server/api/context';
 import { appRouter } from '../src/server/api/root';
 
@@ -157,6 +158,14 @@ test('CA-06 — Meus empréstimos mostra somente os próprios abertos e a data p
   assert.deepEqual(await other.api.loans.mine(), []);
   await db.loan.update({ where: { id: loan.id }, data: { returnedAt: new Date() } });
   assert.deepEqual(await caller(identity).loans.mine(), []);
+});
+
+test('CA-06 — Meus empréstimos publicado exclui o histórico demonstrativo', async () => {
+  const response = await serveApp();
+  const html = await response.text();
+
+  assert.match(html, /id="loan-rows"/);
+  assert.equal(/Dock USB-C Anker|ThinkPad T14|Adaptador HDMI Belkin/.test(html), false);
 });
 
 test('CA-07 — exige vínculo autenticado e isola consultas e solicitações por tenant', async () => {
