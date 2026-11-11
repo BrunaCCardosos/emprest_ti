@@ -34,10 +34,12 @@ function press(element, key) {
   element.dispatchEvent(Object.assign(new Event('keydown'), { key }));
 }
 
-function openCatalog() {
+function openCatalog(serverData) {
   const grid = new Element();
   const count = new Element();
   const search = new Element();
+  const loanButton = new Element();
+  loanButton.style = {};
   const catalogView = { id: 's2', hidden: true, dataset: {} };
   const detailView = { id: 's3', hidden: true, dataset: {} };
   const details = ['name', 'cat', 'pat'].map(() => new Element());
@@ -50,12 +52,14 @@ function openCatalog() {
 
   const elements = new Map([
     ['catalog-grid', grid], ['catalog-count', count], ['catalog-search', search],
+    ['open-dialog-btn', loanButton],
     ['detail-name', details[0]], ['detail-cat', details[1]], ['detail-pat', details[2]],
   ]);
   const chipRow = { querySelectorAll: () => [...chips.values()] };
   const views = [catalogView, detailView];
   const document = {
     readyState: 'loading',
+    documentElement: { hasAttribute: (name) => !!serverData && name === 'data-empresti-server' },
     addEventListener() {},
     getElementById: (id) => elements.get(id) ?? null,
     createElement: () => new Element(),
@@ -79,14 +83,25 @@ function openCatalog() {
       window.dispatchEvent(new Event('hashchange'));
     },
   };
-  const context = vm.createContext({ document, window, location });
+  const context = vm.createContext({
+    document, window, location,
+    fetch: async (url) => {
+      const procedure = url.split('?')[0].replace('/api/trpc/', '');
+      assert.ok(serverData && Object.hasOwn(serverData, procedure), procedure);
+      return { ok: true, json: async () => ({ result: { data: { json: serverData[procedure] } } }) };
+    },
+  });
   vm.runInContext(app, context, { filename: 'app.js' });
-  // Sessão simulada. A inicialização usa o catálogo de demonstração do app.
-  vm.runInContext("session = { user: { email: 'teste@example.test' } }; boot();", context);
+  if (serverData) {
+    vm.runInContext('boot();', context);
+  } else {
+    // Sessão simulada para inicializar o catálogo de demonstração.
+    vm.runInContext("session = { user: { email: 'teste@example.test' } }; boot();", context);
+  }
 
   const cards = () => grid.children.filter((child) => child.className.startsWith('equip-card'));
   return {
-    grid, count, catalogView, detailView, details, cards,
+    grid, count, catalogView, detailView, details, cards, loanButton,
     card: (pat) => cards().find((card) => card.innerHTML.includes(pat)),
     assets: () => cards().map((card) => card.innerHTML.match(/PAT-\d+/u)?.[0]),
     filter: (label) => chips.get(label).dispatchEvent(new Event('click')),
@@ -231,4 +246,18 @@ test('CA-07 — contador usa os dados na lista geral e nas seleções', () => {
   catalog.filter('Só disponíveis');
   catalog.filter('Todos');
   assert.equal(catalog.count.textContent, '6 equipamentos · 3 disponíveis agora');
+});
+
+test('CA-02 da spec 003 — selecionar equipamento disponível habilita o pedido', async () => {
+  const catalog = openCatalog({
+    'auth.session': { email: 'teste@example.test', name: 'Pessoa de teste', role: 'MEMBER' },
+    'catalog.list': [{ patrimony: 'TI-0001', name: 'Notebook 14 polegadas', category: 'NOTEBOOK', status: 'AVAILABLE' }],
+    'loans.mine': [],
+  });
+  await new Promise((resolve) => setImmediate(resolve));
+
+  assert.equal(catalog.loanButton.disabled, true);
+  catalog.card('TI-0001').dispatchEvent(new Event('click'));
+  assert.equal(catalog.detailView.hidden, false);
+  assert.equal(catalog.loanButton.disabled, false);
 });
